@@ -655,8 +655,6 @@
     font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:600;
     font-size:2.15rem; line-height:1.05; margin:2px 0 14px; color:#6b2338;
   }
-  .bilhete-obs{ font-size:1.3rem; margin:0; color:#4a3f52; }
-  .bilhete-ps{ font-size:1.1rem; margin:18px 0 0; color:#7a6f82; }
   .pedido-actions{ display:flex; gap:14px; justify-content:center; align-items:center; margin-top:26px; flex-wrap:wrap; }
   .btn-sim, .btn-nao{
     font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.14em;
@@ -700,7 +698,7 @@
     transform:rotate(-.8deg);
   }
   .love-emoji{ font-size:2.3rem; line-height:1; }
-  .love-hand{ font-family:'Caveat',cursive; font-size:2.5rem; line-height:1; margin:12px 0 8px; color:#6b2338; }
+  .love-hand{ font-family:'Caveat',cursive; font-size:clamp(1.7rem, 6vw, 2.4rem); line-height:1.1; margin:12px 0 8px; color:#6b2338; }
   .love-nota .love-overlay-note{ font-family:'Caveat',cursive; font-size:1.4rem; color:#4a3f52; margin:0; }
   .love-nota .love-counter{ display:flex; gap:26px; justify-content:center; margin-top:24px; flex-wrap:wrap; }
   .love-nota .counter-num{ color:#6b2338; font-size:1.7rem; }
@@ -728,8 +726,7 @@
   <span class="eyebrow">um pedido pra você</span>
   <h2 style="font-size:2.2rem; font-style:italic;">tem uma coisinha que eu quero te perguntar</h2>
   <p style="color:var(--muted); margin-top:14px; max-width:600px;">
-    fiz esse joguinho bobo pra não chegar chegando. vai tocando nos corações que sobem —
-    cada um tem um pedacinho do que eu sinto. quando você pegar todos, eu falo o resto. 💌
+    eu não quero esperar essa aposta — eu quero hoje e pra sempre. 💌
   </p>
 
   <div class="jogo-stage" id="jogoStage">
@@ -747,12 +744,10 @@
       <span class="bilhete-tape" aria-hidden="true"></span>
       <p class="bilhete-linha">então é isso...</p>
       <p class="bilhete-pergunta">quer namorar comigo hoje?</p>
-      <p class="bilhete-obs">não precisa esperar os 3 meses da aposta. eu já sei a resposta que eu quero — só falta a sua.</p>
       <div class="pedido-actions">
         <button id="btnSim" class="btn-sim" type="button" onclick="aceitouNamorar()">sim, eu quero ♡</button>
         <button id="btnNao" class="btn-nao" type="button" onmouseover="fugirBotao(this)" onclick="fugirBotao(this)">ainda não</button>
       </div>
-      <p class="bilhete-ps">ps: o "ainda não" foge. o "sim" fica. ♡</p>
     </div>
   </div>
 
@@ -772,7 +767,7 @@
 <div class="love-overlay" id="loveOverlay" aria-hidden="true">
   <div class="love-nota">
     <div class="love-emoji">💌</div>
-    <div class="love-hand">que bom que você disse sim</div>
+    <div class="love-hand">ainda bem que disse sim, não vou ter q te sequestrar</div>
     <p class="love-overlay-note" id="loveOverlayNote"></p>
     <div class="love-counter">
       <div class="counter-block"><div class="counter-num" id="ov-days">0</div><div class="counter-label">dias juntos</div></div>
