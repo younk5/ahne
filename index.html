@@ -549,6 +549,7 @@
   <span class="eyebrow">eu te quero muito</span>
   <h1>muito mesmo <span>Delírio</span></h1>
   <p class="sub">fiz esse site pra te mostrar um monte de coisa que eu reparo em você</p>
+  <p style="margin-top:10px; font-size:1rem; color:var(--muted); opacity:0; animation: fadeUp 1.1s ease forwards 1.1s;">lê até o fim, tem uma coisinha te esperando lá embaixo 👀</p>
   <div id="counter">
     <div class="counter-block"><div class="counter-num" id="c-days">0</div><div class="counter-label">dias reparando em você</div></div>
     <div class="counter-block"><div class="counter-num" id="c-hours">0</div><div class="counter-label">horas</div></div>
@@ -593,190 +594,6 @@
   </div>
   <p class="caption">ainda tô com vontade, é sério.</p>
 </section>
-
-<div class="divider"></div>
-
-<!-- PROPOSTA: JOGUINHO + PEDIDO -->
-<style>
-  /* --- joguinho dos corações --- */
-  .jogo-stage{
-    position:relative; height:430px; max-width:720px; margin:38px auto 0;
-    border-radius:22px; overflow:hidden; border:1px solid var(--line);
-    background:
-      radial-gradient(ellipse 70% 55% at 50% 118%, rgba(173,67,96,.22), transparent 62%),
-      radial-gradient(ellipse 60% 45% at 50% -10%, rgba(201,162,74,.10), transparent 60%),
-      linear-gradient(180deg, rgba(25,18,32,.7), rgba(15,11,20,.9));
-    transition:opacity .6s ease, transform .6s ease;
-  }
-  #jogoCanvas{ position:absolute; inset:0; width:100%; height:100%; cursor:pointer; touch-action:manipulation; }
-  .jogo-hud{
-    position:absolute; top:14px; left:0; right:0; display:flex; justify-content:space-between;
-    padding:0 20px; pointer-events:none;
-    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.16em;
-    text-transform:uppercase; color:var(--muted);
-  }
-  .jogo-balao{
-    position:absolute; left:50%; bottom:24px; width:min(520px,88%);
-    transform:translateX(-50%) translateY(12px);
-    background:rgba(15,11,20,.94); border:1px solid var(--line); border-radius:16px;
-    padding:16px 22px; text-align:center;
-    font-family:'Caveat',cursive; font-size:1.55rem; line-height:1.15; color:var(--text);
-    opacity:0; transition:opacity .4s ease, transform .4s ease; pointer-events:none;
-  }
-  .jogo-balao.show{ opacity:1; transform:translateX(-50%) translateY(0); }
-  .jogo-skip{
-    display:block; margin:16px auto 0; background:none; border:0; cursor:pointer;
-    color:var(--muted); font-family:'JetBrains Mono',monospace; font-size:10px;
-    letter-spacing:.14em; text-transform:uppercase;
-    border-bottom:1px dotted var(--muted); padding-bottom:2px;
-  }
-  .jogo-skip:hover{ color:var(--text); }
-
-  /* --- bilhete de papel --- */
-  .pedido{
-    max-width:560px; margin:46px auto 0; opacity:0;
-    transform:translateY(20px) rotate(-.6deg);
-    transition:opacity .9s ease, transform .9s ease;
-  }
-  .pedido.visible{ opacity:1; transform:translateY(0) rotate(-.6deg); }
-  .bilhete{
-    position:relative; background:#f5edda; color:#2d2431;
-    padding:44px 34px 32px; border-radius:5px;
-    box-shadow:0 34px 80px rgba(0,0,0,.6);
-    font-family:'Caveat',cursive;
-  }
-  .bilhete-tape{
-    position:absolute; top:-13px; left:50%; width:130px; height:28px;
-    transform:translateX(-50%) rotate(-2.5deg);
-    background:rgba(201,162,74,.32); border:1px solid rgba(201,162,74,.45);
-  }
-  .bilhete-linha{ font-size:1.5rem; opacity:.75; margin:0 0 4px; }
-  .bilhete-pergunta{
-    font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:600;
-    font-size:2.15rem; line-height:1.05; margin:2px 0 14px; color:#6b2338;
-  }
-  .pedido-actions{ display:flex; gap:14px; justify-content:center; align-items:center; margin-top:26px; flex-wrap:wrap; }
-  .btn-sim, .btn-nao{
-    font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.14em;
-    text-transform:uppercase; padding:15px 28px; border-radius:999px; cursor:pointer;
-    transition:transform .25s ease, box-shadow .25s ease, background .3s ease, color .3s ease, font-size .2s ease;
-  }
-  .btn-sim{ border:0; color:#fff; background:linear-gradient(135deg, var(--rose), #8a2f4b); box-shadow:0 10px 26px rgba(173,67,96,.4); }
-  .btn-sim:hover{ transform:translateY(-3px) scale(1.03); }
-  .btn-nao{ background:transparent; border:1px solid rgba(45,36,49,.3); color:#7a6f82; }
-  .btn-nao.fugindo{ position:fixed; margin:0; z-index:120; box-shadow:0 10px 30px rgba(0,0,0,.6); }
-
-  /* --- card do "estamos namorando" --- */
-  .namorando-card{
-    display:none; max-width:560px; margin:0 auto; padding:40px 30px; border-radius:20px;
-    background:linear-gradient(180deg, rgba(25,18,32,.97), rgba(15,11,20,.97));
-    border:1px solid var(--line); text-align:center;
-    opacity:0; transform:translateY(16px) scale(.98);
-    transition:opacity .9s ease, transform .9s ease;
-  }
-  .namorando-card.visible{ opacity:1; transform:none; }
-  .namorando-badge{
-    display:inline-block; font-family:'JetBrains Mono',monospace; font-size:10px;
-    letter-spacing:.28em; text-transform:uppercase; color:var(--gold);
-    border:1px solid var(--line); border-radius:999px; padding:6px 16px;
-  }
-  #namorandoBox .love-title{ font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.9rem; margin:16px 0 6px; }
-  #namorandoBox .love-since{ font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); }
-  #namorandoBox .love-counter{ display:flex; gap:30px; justify-content:center; margin-top:26px; flex-wrap:wrap; }
-
-  /* --- overlay: bilhete do sim --- */
-  .love-overlay{
-    position:fixed; inset:0; z-index:200; display:none; align-items:center; justify-content:center;
-    padding:24px; text-align:center; background:rgba(11,9,16,.93);
-    backdrop-filter:blur(6px); opacity:0; transition:opacity .7s ease;
-  }
-  .love-overlay.open{ display:flex; opacity:1; }
-  .love-nota{
-    position:relative; z-index:2; width:100%; max-width:440px;
-    background:#f5edda; color:#2d2431; border-radius:6px;
-    padding:36px 30px 28px; box-shadow:0 44px 100px rgba(0,0,0,.65);
-    transform:rotate(-.8deg);
-  }
-  .love-emoji{ font-size:2.3rem; line-height:1; }
-  .love-hand{ font-family:'Caveat',cursive; font-size:clamp(1.7rem, 6vw, 2.4rem); line-height:1.1; margin:12px 0 8px; color:#6b2338; }
-  .love-nota .love-overlay-note{ font-family:'Caveat',cursive; font-size:1.4rem; color:#4a3f52; margin:0; }
-  .love-nota .love-counter{ display:flex; gap:26px; justify-content:center; margin-top:24px; flex-wrap:wrap; }
-  .love-nota .counter-num{ color:#6b2338; font-size:1.7rem; }
-  .love-nota .counter-label{ color:#8a7f92; }
-  .love-close{
-    margin-top:26px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.16em;
-    text-transform:uppercase; padding:13px 26px; border-radius:999px; cursor:pointer;
-    background:transparent; border:1px solid rgba(45,36,49,.3); color:#7a6f82; transition:all .25s ease;
-  }
-  .love-close:hover{ color:#2d2431; border-color:#6b2338; }
-
-  .heart{ position:fixed; bottom:-30px; pointer-events:none; z-index:210; animation:loveSubir 3.6s ease-in forwards; }
-  @keyframes loveSubir{
-    0%{ transform:translateY(0) scale(.6); opacity:0; }
-    15%{ opacity:1; }
-    100%{ transform:translateY(-108vh) scale(1.05) rotate(14deg); opacity:0; }
-  }
-
-  @media (prefers-reduced-motion: reduce){
-    .heart{ display:none; }
-  }
-</style>
-
-<section id="proposta" class="reveal">
-  <span class="eyebrow">um pedido pra você</span>
-  <h2 style="font-size:2.2rem; font-style:italic;">tem uma coisinha que eu quero te perguntar</h2>
-  <p style="color:var(--muted); margin-top:14px; max-width:600px;">
-    eu não quero esperar essa aposta — eu quero hoje e pra sempre. 💌
-  </p>
-
-  <div class="jogo-stage" id="jogoStage">
-    <canvas id="jogoCanvas" aria-label="jogo: toque nos corações"></canvas>
-    <div class="jogo-hud">
-      <span id="jogoContador">0 / 7 corações</span>
-      <span id="jogoDica">toca nos corações ♡</span>
-    </div>
-    <div class="jogo-balao" id="jogoBalao"></div>
-  </div>
-  <button class="jogo-skip" id="jogoSkip" type="button">pular o joguinho e ir direto ao pedido</button>
-
-  <div class="pedido" id="pedidoBox" hidden>
-    <div class="bilhete">
-      <span class="bilhete-tape" aria-hidden="true"></span>
-      <p class="bilhete-linha">então é isso...</p>
-      <p class="bilhete-pergunta">quer namorar comigo hoje?</p>
-      <div class="pedido-actions">
-        <button id="btnSim" class="btn-sim" type="button" onclick="aceitouNamorar()">sim, eu quero ♡</button>
-        <button id="btnNao" class="btn-nao" type="button" onmouseover="fugirBotao(this)" onclick="fugirBotao(this)">ainda não</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="namorando-card" id="namorandoBox">
-    <div class="namorando-badge">✦ a gente ✦</div>
-    <div class="love-title">a partir de agora, é a gente.</div>
-    <div class="love-since">namorando desde <span id="love-since">hoje</span></div>
-    <div class="love-counter">
-      <div class="counter-block"><div class="counter-num" id="love-days">0</div><div class="counter-label">dias</div></div>
-      <div class="counter-block"><div class="counter-num" id="love-hours">0</div><div class="counter-label">horas</div></div>
-      <div class="counter-block"><div class="counter-num" id="love-min">0</div><div class="counter-label">minutos</div></div>
-    </div>
-    <p class="caption">obrigado por pular a aposta comigo. agora é oficial. ♡</p>
-  </div>
-</section>
-
-<div class="love-overlay" id="loveOverlay" aria-hidden="true">
-  <div class="love-nota">
-    <div class="love-emoji">💌</div>
-    <div class="love-hand">ainda bem que disse sim, não vou ter q te sequestrar</div>
-    <p class="love-overlay-note" id="loveOverlayNote"></p>
-    <div class="love-counter">
-      <div class="counter-block"><div class="counter-num" id="ov-days">0</div><div class="counter-label">dias juntos</div></div>
-      <div class="counter-block"><div class="counter-num" id="ov-hours">0</div><div class="counter-label">horas</div></div>
-      <div class="counter-block"><div class="counter-num" id="ov-min">0</div><div class="counter-label">minutos</div></div>
-    </div>
-    <button class="love-close" type="button" onclick="fecharOverlay()">guardar esse dia ♡</button>
-  </div>
-</div>
 
 <div class="divider"></div>
 
@@ -890,12 +707,205 @@
       <div class="tl-text">vc tava tao estressada q n conseguia formata o pc que esqueceu q tinha vergonha e me ligou kkkk</div>
     </div>
     <div class="tl-item">
-      <div class="tl-date">hoje 06/07/2026 16:32</div>
-      <div class="tl-title">este site</div>
-      <div class="tl-text">a gente ainda não namora — mas isso pode virar oficial hoje, é só você querer. eu vou fazer de tudo por vc desde sempre</div>
+      <div class="tl-date" id="tlHojeData">hoje 06/07/2026 16:32</div>
+      <div class="tl-title" id="tlHojeTitulo">este site</div>
+      <div class="tl-text" id="tlHojeTexto">a gente ainda não namora — mas isso pode virar oficial hoje, é só você querer. eu vou fazer de tudo por vc desde sempre</div>
     </div>
   </div>
 </section>
+
+<div class="divider"></div>
+
+<!-- PROPOSTA: JOGUINHO + PEDIDO -->
+<style>
+  /* --- joguinho dos corações --- */
+  .jogo-stage{
+    position:relative; height:430px; max-width:720px; margin:38px auto 0;
+    border-radius:22px; overflow:hidden; border:1px solid var(--line);
+    background:
+      radial-gradient(ellipse 70% 55% at 50% 118%, rgba(173,67,96,.22), transparent 62%),
+      radial-gradient(ellipse 60% 45% at 50% -10%, rgba(201,162,74,.10), transparent 60%),
+      linear-gradient(180deg, rgba(25,18,32,.7), rgba(15,11,20,.9));
+    transition:opacity .6s ease, transform .6s ease;
+  }
+  #jogoCanvas{ position:absolute; inset:0; width:100%; height:100%; cursor:pointer; touch-action:manipulation; }
+  .jogo-hud{
+    position:absolute; top:14px; left:0; right:0; display:flex; justify-content:space-between;
+    padding:0 20px; pointer-events:none;
+    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--muted);
+  }
+  .jogo-balao{
+    position:absolute; left:50%; bottom:24px; width:min(520px,88%);
+    transform:translateX(-50%) translateY(12px);
+    background:rgba(15,11,20,.94); border:1px solid var(--line); border-radius:16px;
+    padding:16px 22px; text-align:center;
+    font-family:'Caveat',cursive; font-size:1.55rem; line-height:1.15; color:var(--text);
+    opacity:0; transition:opacity .4s ease, transform .4s ease; pointer-events:none;
+  }
+  .jogo-balao.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+  .jogo-skip{
+    display:block; margin:16px auto 0; background:none; border:0; cursor:pointer;
+    color:var(--muted); font-family:'JetBrains Mono',monospace; font-size:10px;
+    letter-spacing:.14em; text-transform:uppercase;
+    border-bottom:1px dotted var(--muted); padding-bottom:2px;
+  }
+  .jogo-skip:hover{ color:var(--text); }
+
+  /* --- bilhete de papel --- */
+  .pedido{
+    max-width:560px; margin:46px auto 0; opacity:0;
+    transform:translateY(20px) rotate(-.6deg);
+    transition:opacity .9s ease, transform .9s ease;
+  }
+  .pedido.visible{ opacity:1; transform:translateY(0) rotate(-.6deg); }
+  .bilhete{
+    position:relative; background:#f5edda; color:#2d2431;
+    padding:44px 34px 32px; border-radius:5px;
+    box-shadow:0 34px 80px rgba(0,0,0,.6);
+    font-family:'Caveat',cursive;
+  }
+  .bilhete-tape{
+    position:absolute; top:-13px; left:50%; width:130px; height:28px;
+    transform:translateX(-50%) rotate(-2.5deg);
+    background:rgba(201,162,74,.32); border:1px solid rgba(201,162,74,.45);
+  }
+  .bilhete-linha{ font-size:1.5rem; opacity:.75; margin:0 0 4px; }
+  .bilhete-pergunta{
+    font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:600;
+    font-size:2.15rem; line-height:1.05; margin:2px 0 14px; color:#6b2338;
+  }
+  .proposta-chamada{
+    font-family:'Caveat',cursive; font-size:clamp(1.9rem, 6.5vw, 2.7rem);
+    color:var(--rose); margin:18px 0 0; transform:rotate(-1deg);
+  }
+  .pedido-actions{ display:flex; gap:14px; justify-content:center; align-items:center; margin-top:26px; flex-wrap:wrap; }
+  .btn-sim, .btn-nao{
+    font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.14em;
+    text-transform:uppercase; padding:15px 28px; border-radius:999px; cursor:pointer;
+    transition:transform .25s ease, box-shadow .25s ease, background .3s ease, color .3s ease, font-size .2s ease;
+  }
+  .btn-sim{ border:0; color:#fff; background:linear-gradient(135deg, var(--rose), #8a2f4b); box-shadow:0 10px 26px rgba(173,67,96,.4); }
+  .btn-sim:hover{ transform:translateY(-3px) scale(1.03); }
+  .btn-sim.btn-claro{ background:transparent; border:1px solid var(--rose); color:#6b2338; box-shadow:none; }
+  .btn-sim.btn-claro:hover{ background:rgba(173,67,96,.12); }
+  .btn-nao{ background:transparent; border:1px solid rgba(45,36,49,.3); color:#7a6f82; }
+  .btn-nao.fugindo{ position:fixed; margin:0; z-index:120; box-shadow:0 10px 30px rgba(0,0,0,.6); }
+
+  /* --- card do "estamos namorando" --- */
+  .namorando-card{
+    display:none; max-width:560px; margin:0 auto; padding:40px 30px; border-radius:20px;
+    background:linear-gradient(180deg, rgba(25,18,32,.97), rgba(15,11,20,.97));
+    border:1px solid var(--line); text-align:center;
+    opacity:0; transform:translateY(16px) scale(.98);
+    transition:opacity .9s ease, transform .9s ease;
+  }
+  .namorando-card.visible{ opacity:1; transform:none; }
+  .namorando-badge{
+    display:inline-block; font-family:'JetBrains Mono',monospace; font-size:10px;
+    letter-spacing:.28em; text-transform:uppercase; color:var(--gold);
+    border:1px solid var(--line); border-radius:999px; padding:6px 16px;
+  }
+  #namorandoBox .love-title{ font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.9rem; margin:16px 0 6px; }
+  #namorandoBox .love-since{ font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); }
+  #namorandoBox .love-counter{ display:flex; gap:30px; justify-content:center; margin-top:26px; flex-wrap:wrap; }
+
+  /* --- overlay: bilhete do sim --- */
+  .love-overlay{
+    position:fixed; inset:0; z-index:200; display:none; align-items:center; justify-content:center;
+    padding:24px; text-align:center; background:rgba(11,9,16,.93);
+    backdrop-filter:blur(6px); opacity:0; transition:opacity .7s ease;
+  }
+  .love-overlay.open{ display:flex; opacity:1; }
+  .love-nota{
+    position:relative; z-index:2; width:100%; max-width:440px;
+    background:#f5edda; color:#2d2431; border-radius:6px;
+    padding:36px 30px 28px; box-shadow:0 44px 100px rgba(0,0,0,.65);
+    transform:rotate(-.8deg);
+  }
+  .love-emoji{ font-size:2.3rem; line-height:1; }
+  .love-hand{ font-family:'Caveat',cursive; font-size:clamp(1.7rem, 6vw, 2.4rem); line-height:1.1; margin:12px 0 8px; color:#6b2338; }
+  .love-nota .love-overlay-note{ font-family:'Caveat',cursive; font-size:1.4rem; color:#4a3f52; margin:0; }
+  .love-nota .love-counter{ display:flex; gap:26px; justify-content:center; margin-top:24px; flex-wrap:wrap; }
+  .love-nota .counter-num{ color:#6b2338; font-size:1.7rem; }
+  .love-nota .counter-label{ color:#8a7f92; }
+  .love-close{
+    margin-top:26px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.16em;
+    text-transform:uppercase; padding:13px 26px; border-radius:999px; cursor:pointer;
+    background:transparent; border:1px solid rgba(45,36,49,.3); color:#7a6f82; transition:all .25s ease;
+  }
+  .love-close:hover{ color:#2d2431; border-color:#6b2338; }
+
+  .heart{ position:fixed; bottom:-30px; pointer-events:none; z-index:210; animation:loveSubir 3.6s ease-in forwards; }
+  @keyframes loveSubir{
+    0%{ transform:translateY(0) scale(.6); opacity:0; }
+    15%{ opacity:1; }
+    100%{ transform:translateY(-108vh) scale(1.05) rotate(14deg); opacity:0; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .heart{ display:none; }
+  }
+</style>
+
+<section id="proposta" class="reveal">
+  <span class="eyebrow">um pedido pra você</span>
+  <h2 style="font-size:2.2rem; font-style:italic;">tem uma coisinha que eu quero te perguntar</h2>
+  <p style="color:var(--muted); margin-top:14px; max-width:600px;">
+    a gente combinou de esperar 3 meses pra ver se a minha obsessão por você passava.
+    spoiler: não passou. e sinceramente? eu não quero esperar mais.
+  </p>
+  <p class="proposta-chamada">vamos adiantar essa aposta?</p>
+
+  <div class="jogo-stage" id="jogoStage">
+    <canvas id="jogoCanvas" aria-label="jogo: toque nos corações"></canvas>
+    <div class="jogo-hud">
+      <span id="jogoContador">0 / 7 corações</span>
+      <span id="jogoDica">toca nos corações ♡</span>
+    </div>
+    <div class="jogo-balao" id="jogoBalao"></div>
+  </div>
+  <button class="jogo-skip" id="jogoSkip" type="button">pular o joguinho e ir direto ao pedido</button>
+
+  <div class="pedido" id="pedidoBox" hidden>
+    <div class="bilhete">
+      <span class="bilhete-tape" aria-hidden="true"></span>
+      <p class="bilhete-linha">então é isso...</p>
+      <p class="bilhete-pergunta">quer namorar comigo?</p>
+      <div class="pedido-actions">
+        <button id="btnSim" class="btn-sim" type="button" onclick="aceitouNamorar()">sim ♡</button>
+        <button id="btnClaro" class="btn-sim btn-claro" type="button" onclick="aceitouNamorar()">com certeza sim</button>
+        <button id="btnNao" class="btn-nao" type="button" onmouseover="fugirBotao(this)" onclick="fugirBotao(this)">ainda não</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="namorando-card" id="namorandoBox">
+    <div class="namorando-badge">✦ a gente ✦</div>
+    <div class="love-title">a partir de agora, é a gente.</div>
+    <div class="love-since">namorando desde <span id="love-since">hoje</span></div>
+    <div class="love-counter">
+      <div class="counter-block"><div class="counter-num" id="love-days">0</div><div class="counter-label">dias</div></div>
+      <div class="counter-block"><div class="counter-num" id="love-hours">0</div><div class="counter-label">horas</div></div>
+      <div class="counter-block"><div class="counter-num" id="love-min">0</div><div class="counter-label">minutos</div></div>
+    </div>
+    <p class="caption">obrigado por pular a aposta comigo. agora é oficial. ♡</p>
+  </div>
+</section>
+
+<div class="love-overlay" id="loveOverlay" aria-hidden="true">
+  <div class="love-nota">
+    <div class="love-emoji">💌</div>
+    <div class="love-hand">ainda bem que disse sim, não vou ter q te sequestrar</div>
+    <p class="love-overlay-note" id="loveOverlayNote"></p>
+    <div class="love-counter">
+      <div class="counter-block"><div class="counter-num" id="ov-days">0</div><div class="counter-label">dias juntos</div></div>
+      <div class="counter-block"><div class="counter-num" id="ov-hours">0</div><div class="counter-label">horas</div></div>
+      <div class="counter-block"><div class="counter-num" id="ov-min">0</div><div class="counter-label">minutos</div></div>
+    </div>
+    <button class="love-close" type="button" onclick="fecharOverlay()">guardar esse dia ♡</button>
+  </div>
+</div>
 
 <div class="divider"></div>
 
@@ -1233,9 +1243,21 @@
     }
   })();
 
+  function horaCurta(d){
+    return d.toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
+  }
+
+  // marca a timeline como "o dia em que você disse sim"
+  function marcarTimeline(ts){
+    const d = new Date(ts);
+    setTxt('tlHojeData', 'hoje ' + d.toLocaleDateString('pt-BR') + ' ' + horaCurta(d));
+    setTxt('tlHojeTitulo', 'o dia em que você disse sim');
+    setTxt('tlHojeTexto', 'a partir daqui é a gente. eu vou fazer de tudo por vc desde sempre — e agora é oficial.');
+  }
+
   function atualizarNamoro(ts){
     const d = new Date(ts);
-    setTxt('love-since', d.toLocaleDateString('pt-BR'));
+    setTxt('love-since', d.toLocaleDateString('pt-BR') + ' às ' + horaCurta(d));
     const diff = Date.now() - ts;
     const dd = Math.floor(diff / 86400000).toLocaleString('pt-BR');
     const hh = Math.floor((diff % 86400000) / 3600000);
@@ -1256,6 +1278,7 @@
     nb.style.display = 'block';
     requestAnimationFrame(()=> nb.classList.add('visible'));
     atualizarNamoro(ts);
+    marcarTimeline(ts);
     if(!mostrarNamorando._i) mostrarNamorando._i = setInterval(()=> atualizarNamoro(ts), 30000);
   }
 
@@ -1306,7 +1329,7 @@
   function abrirOverlay(ts){
     const ov = document.getElementById('loveOverlay');
     if(!ov) return;
-    setTxt('loveOverlayNote', 'desde ' + new Date(ts).toLocaleDateString('pt-BR') + ', o nosso dia.');
+    setTxt('loveOverlayNote', 'desde ' + new Date(ts).toLocaleDateString('pt-BR') + ' às ' + horaCurta(new Date(ts)) + ', o nosso dia.');
     ov.classList.add('open');
     ov.setAttribute('aria-hidden', 'false');
     chuvaCoracoes();
